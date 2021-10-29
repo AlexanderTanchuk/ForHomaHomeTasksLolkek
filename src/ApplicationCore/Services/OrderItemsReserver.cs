@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Text;
 using JsonConverter = System.Text.Json.Serialization.JsonConverter;
+using Azure.Messaging.ServiceBus;
+using Microsoft.Azure.ServiceBus;
+using System;
 
 namespace Microsoft.eShopWeb.ApplicationCore.Services
 {
@@ -21,6 +24,8 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
         private readonly IUriComposer _uriComposer;
         private readonly HttpClient _httpClient;
         private readonly string _apiUrl;
+
+        private IQueueClient queueClient;
 
         public OrderItemsReserver(IUriComposer uriComposer, HttpClient httpClient, BaseUrlConfiguration baseUrlConfiguration)
         {
@@ -31,19 +36,31 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
 
         public async Task CallFunctionAsync(Order order)
         {
-            /*var itemOrder = new List<ItemOrder>();
-            foreach (var entry in orderDetails)
-            {
-                itemOrder.Add(new ItemOrder
-                {
-                    Id = entry.Key,
-                    Quantity = entry.Value
-                });
-            }*/
-            var fortesting = JsonConvert.SerializeObject(this.Map(order));
-
             var orderJson = new StringContent(JsonConvert.SerializeObject(this.Map(order)));
             await _httpClient.PostAsync($"{_apiUrl}", orderJson);
+        }
+
+        public async Task SendToServiceBusAsync(Order order)
+        {
+            var connectionString = "Endpoint=sb://azwebappbus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=iIZdYpgsyfUBwd9jMbyo1Asnt1LdSvT51rOoTcvsLf0=";
+            var queueName = "pendingorders";
+
+            var orderJson = JsonConvert.SerializeObject(this.Map(order));
+            string messageBody = orderJson;
+            var message = new Message(Encoding.UTF8.GetBytes(messageBody));
+            queueClient = new QueueClient(connectionString, queueName);
+            try
+            {
+                await queueClient.SendAsync(message);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"{DateTime.Now} :: Exception: {exception.Message}");
+            }
+
+            await queueClient.CloseAsync();
+
+
         }
 
         private class ItemOrder

@@ -49,11 +49,11 @@ namespace Microsoft.eShopWeb.Web
                     webBuilder.UseStartup<Startup>();
                 }).ConfigureAppConfiguration((context, config) => 
                 {
-                    var buildConfig = config.Build();
+                    /*var buildConfig = config.Build();
                     var vaultName = buildConfig["VaultName"];
 
                     Uri vaultUri = new Uri($"https://{vaultName}.vault.azure.net/");
-                    config.AddAzureKeyVault(vaultUri, new DefaultAzureCredential());
+                    config.AddAzureKeyVault(vaultUri, new DefaultAzureCredential());*/
                 });
     }
 }

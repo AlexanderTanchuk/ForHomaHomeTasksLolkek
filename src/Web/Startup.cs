@@ -47,11 +47,17 @@ namespace Microsoft.eShopWeb.Web
 
             // use real database
             //ConfigureProductionServices(services);
-            var connectionStringName = "AzureSqlConnectionString";
-            var connectionStringValue = Configuration[connectionStringName];
+
+            /*var connectionStringName = "AzureSqlConnectionString";
+            var connectionStringValue = Configuration[connectionStringName];*/
+
             //Configuration.GetConnectionString("CatalogConnection")
+
+            /*services.AddDbContext<CatalogContext>(c =>
+                c.UseSqlServer(connectionStringValue));*/
+
             services.AddDbContext<CatalogContext>(c =>
-                c.UseSqlServer(connectionStringValue));
+                c.UseInMemoryDatabase("Catalog"));
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseInMemoryDatabase("Identity"));
 
