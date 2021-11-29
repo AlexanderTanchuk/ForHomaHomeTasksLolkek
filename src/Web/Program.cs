@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+//using static Constants;
 
 namespace Microsoft.eShopWeb.Web
 {
@@ -49,11 +50,11 @@ namespace Microsoft.eShopWeb.Web
                     webBuilder.UseStartup<Startup>();
                 }).ConfigureAppConfiguration((context, config) => 
                 {
-                    /*var buildConfig = config.Build();
-                    var vaultName = buildConfig["VaultName"];
+                    var buildConfig = config.Build();
+                    var vaultUriString = buildConfig[Constants.VAULT_URI];
 
-                    Uri vaultUri = new Uri($"https://{vaultName}.vault.azure.net/");
-                    config.AddAzureKeyVault(vaultUri, new DefaultAzureCredential());*/
+                    Uri vaultUri = new Uri(vaultUriString);
+                    config.AddAzureKeyVault(vaultUri, new DefaultAzureCredential());
                 });
     }
 }

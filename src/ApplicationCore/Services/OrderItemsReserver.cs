@@ -42,7 +42,7 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services
 
         public async Task SendToServiceBusAsync(Order order)
         {
-            var connectionString = "Endpoint=sb://azwebappbus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=iIZdYpgsyfUBwd9jMbyo1Asnt1LdSvT51rOoTcvsLf0=";
+            var connectionString = Environment.GetEnvironmentVariable("AzureWebJobsServiceBus");
             var queueName = "pendingorders";
 
             var orderJson = JsonConvert.SerializeObject(this.Map(order));

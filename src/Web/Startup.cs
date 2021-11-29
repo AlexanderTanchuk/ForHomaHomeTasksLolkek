@@ -42,22 +42,12 @@ namespace Microsoft.eShopWeb.Web
 
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            // use in-memory database
-            //ConfigureInMemoryDatabases(services);
 
-            // use real database
-            //ConfigureProductionServices(services);
-
-            /*var connectionStringName = "AzureSqlConnectionString";
-            var connectionStringValue = Configuration[connectionStringName];*/
-
-            //Configuration.GetConnectionString("CatalogConnection")
-
-            /*services.AddDbContext<CatalogContext>(c =>
-                c.UseSqlServer(connectionStringValue));*/
+            var connectionStringValue = Configuration[Constants.SQL_CONNECTION_STRING];
 
             services.AddDbContext<CatalogContext>(c =>
-                c.UseInMemoryDatabase("Catalog"));
+                c.UseSqlServer(connectionStringValue));
+
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseInMemoryDatabase("Identity"));
 

@@ -1,7 +1,9 @@
+using Azure.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.Infrastructure.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -47,6 +49,13 @@ namespace Microsoft.eShopWeb.PublicApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                }).ConfigureAppConfiguration((context, config) =>
+                {
+                    var buildConfig = config.Build();
+                    var vaultUriString = buildConfig["VAULT_URI"];
+
+                    Uri vaultUri = new Uri(vaultUriString);
+                    config.AddAzureKeyVault(vaultUri, new DefaultAzureCredential());
                 });
     }
 }

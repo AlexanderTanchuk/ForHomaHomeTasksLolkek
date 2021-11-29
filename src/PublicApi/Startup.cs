@@ -54,8 +54,10 @@ namespace Microsoft.eShopWeb.PublicApi
 
         private void ConfigureInMemoryDatabases(IServiceCollection services)
         {
+            var connectionStringValue = Configuration["ConnectionStringAzureSql"];
+
             services.AddDbContext<CatalogContext>(c =>
-                c.UseInMemoryDatabase("Catalog"));
+                c.UseSqlServer(connectionStringValue));
 
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseInMemoryDatabase("Identity"));

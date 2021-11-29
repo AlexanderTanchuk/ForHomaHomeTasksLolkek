@@ -45,7 +45,6 @@ namespace OrderItemsReserver
             CloudBlobContainer container;
             CloudBlockBlob blob;
             var storageVariableName = "AzureWebJobsStorage";
-            var fakeStorageVariableName = "AzurePlebStorage";
 
             connectionString = Environment.GetEnvironmentVariable(storageVariableName);
             storageAccount = CloudStorageAccount.Parse(connectionString);
